@@ -1,0 +1,11 @@
+.gradientLogo {
+    background-image: linear-gradient(to right, #D58BAA, #83C256);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+.post_box-showdow {
+    box-shadow: -26px 32px 0px -5px rgba(20,35,56,1);
+    -webkit-box-shadow: -26px 32px 0px -5px rgba(20,35,56,1);
+    -moz-box-shadow: -26px 32px 0px -5px rgba(20,35,56,1);
+}
