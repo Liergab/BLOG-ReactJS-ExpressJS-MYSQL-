@@ -7,10 +7,14 @@ import {useForm} from 'react-hook-form';
 import * as yup from 'yup';
 import {yupResolver} from "@hookform/resolvers/yup";
 import { useEffect } from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import {useDispatch}from 'react-redux'
+import { useLoginApi } from "../api/auth";
+import { setCredentials } from "../slices/authSlice";
 
 const loginSchema = yup.object().shape({
-  
   email:yup.string().email().required('Email is Required!'),
   password:yup.string().required('Password is Required!').min(8).max(20),
  
@@ -19,6 +23,14 @@ const loginSchema = yup.object().shape({
 
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const loginUser = useMutation({
+    mutationFn: useLoginApi,
+    onSuccess: () => {
+        navigate('/')
+    }
+  })
 
   const{register,
     handleSubmit,
@@ -28,8 +40,15 @@ const Login = () => {
       resolver:yupResolver(loginSchema)
      })
 
-    const onSubmit = (data) => {
-    console.log(data)
+    const onSubmit = async(data) => {
+     try {
+      const res = await loginUser.mutateAsync(data)
+      console.log(res)
+      dispatch(setCredentials({...res}))
+     } catch (error) {
+      console.log(error.response.data)
+      toast.error(error.response.data)
+     }
     }
 
     useEffect(() => {
@@ -78,13 +97,13 @@ const Login = () => {
         </div>
         <Button type="submit"
           className="mt-6 bg-accent" fullWidth >
-          register
+          Login
         </Button>
         <Typography color="gray" className="mt-4 text-center font-normal">
           
           Dont have an account?{" "}
           <Link to="/register" className="font-medium text-accent">
-            Register
+            register
           </Link>
         </Typography>
       </form>

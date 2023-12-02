@@ -9,3 +9,21 @@
     -webkit-box-shadow: -26px 32px 0px -5px rgba(20,35,56,1);
     -moz-box-shadow: -26px 32px 0px -5px rgba(20,35,56,1);
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0.5rem; /* Adjust the width to your preference, 0.5rem is just an example */
+}
+
+.hide-scrollbar::-webkit-scrollbar-track {
+  background: rgb(246, 248, 247)5); /* Hide the scrollbar track */
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent; /* Hide the scrollbar thumb */
+}
+.borderNone {
+  border:none
+}
+.borderLine{
+  border: 1px solid lightgrey;
+}

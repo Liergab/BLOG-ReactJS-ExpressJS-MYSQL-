@@ -2,12 +2,17 @@ import {
   Input,
   Button,
   Typography,
+  Spinner
 } from "@material-tailwind/react";
 import {useForm} from 'react-hook-form';
 import * as yup from 'yup';
 import {yupResolver} from "@hookform/resolvers/yup";
 import { useEffect } from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import { useRegisterApi } from "../api/auth";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+
 
 const registerSchema = yup.object().shape({
   username:yup.string().required('Username is Required!').min(2),
@@ -17,9 +22,14 @@ const registerSchema = yup.object().shape({
 })
 
 const Register = () => {
-
+  const navigate = useNavigate()
+  const registerUser = useMutation({
+    mutationFn:useRegisterApi,
+    onSuccess: () => {
+      navigate('/login')
+    }
+  })
   
-
   const{register,
         handleSubmit,
         reset, 
@@ -29,7 +39,13 @@ const Register = () => {
          })
 
   const onSubmit = (data) => {
-    console.log(data)
+    try {
+       registerUser.mutate(data)
+      console.log(data)
+    } catch (error) {
+      console.log(error.response.data)
+      toast.error(error.response.data)
+    }
   }
 
   useEffect(() => {
@@ -38,6 +54,7 @@ const Register = () => {
     }
   },[formState,isSubmitSuccessful,reset])
 
+   
 
 
   return (
@@ -98,8 +115,8 @@ const Register = () => {
            {errors.confirmPassword && <span className="text-sm text-red-600">{errors.confirmPassword.message}</span>}
         </div>
         <Button type="submit"
-          className="mt-6 bg-accent" fullWidth >
-          register
+          className="mt-6 bg-accent flex items-center justify-center" fullWidth >
+         {registerUser.isPending ? (<span>Loading <Spinner className="h-4 w-4"  /></span>) : 'register'}
         </Button>
         <Typography color="gray" className="mt-4 text-center font-normal">
           Already have an account?{" "}

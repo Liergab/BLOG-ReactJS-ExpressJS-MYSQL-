@@ -1,54 +1,82 @@
-import {db} from '../db.js';
+import {PrismaClient} from '@prisma/client'
 import bcrypt from 'bcrypt';
-
+import asyncHandler from 'express-async-handler'
+import jwt from 'jsonwebtoken'
+import generateToken from '../middleware/generateToken.js';
+const prisma = new PrismaClient()
 
 //@description - register User/ createUser
 //@method - post
 //@access - public
-export const register = (req,res ) => {
-    const  q = 'SELECT * FROM users WHERE email = ? OR username = ?';
-    db.query(q,[req.body.email, req.body.username], (err, data) => {
-        
-        if(err) return res.json(err)
-
-        if(data.length){
-            return res.status(409).json({error:'user already used!'})
-        } 
-
-        const salt = bcrypt.genSaltSync(10);
-        const hashPassword = bcrypt.hashSync(req.body.password, salt)
-
-        const q = 'INSERT INTO users(`email`, `username`, `password`) VALUES (?,?,?)'
-        db.query(q,[req.body.email, req.body.username, hashPassword], (err,data) => {
-            if(err) return res.json(err)
-
-            return res.status(201).json(data)
-        })
-    })
-}
-
-export const getUser = (req,res ) => {
-    const q = `SELECT * FROM users`
-    db.query(q,(err, data) => {
-        if(err){
-            console.log('Err', err)
-            res.status(400).json(err)
-            return ;
+export const register = asyncHandler(async(req,res ) => {
+    const {username,email,password,image} = req.body;
+    try { 
+      const user = await prisma.user.findFirst({
+        where:{
+          email:email
         }
-        res.status(200).json(data)
-    })
+      })
+
+      if(user){
+        res.status(400).json('Email Already Used!')
+      }
+      
+      const salt = await bcrypt.genSalt(10);
+      const hashPassword = await bcrypt.hash(password,salt)
+      const newUser = await prisma.user.create({
+        data:{
+          username,
+          email,
+          image:"",
+          password:hashPassword
+
+        }
+      })
+        res.status(201).json(newUser)
+        
+    } catch (error) {
+      console.log('Error creating user:', error.message);
+    }  
+})
+
+export const getUser = async(req,res ) => {
+  // const getUser = await prisma.user.findMany();
+  // res.status(200).json(getUser)
+  res.json(req.user)
+ 
 }
 
 //@description - login 
 //@method - post
 //@access - public
-export const login = (req,res ) => {
-    res.json({message:"LogIn"})
-}
+export const login = async(req, res) => {
+  const{email, password} = req.body;
+  const user = await prisma.user.findFirst({ where:{ email:email }});
+  if(!user){
+    return res.status(404).json('Invalid Email')
+  }else{
+    if(user && (await bcrypt.compare(password, user.password))){
+      generateToken(res, user.id)
+       res.status(200).json({
+        _id:user.id,
+        email:user.email,
+        username:user.username 
+      })
+    }else{
+      res.status(404).json('Invalid credentials')
+    }
+  }
+ 
+};
 
 //@description - logout
 //@method - post
 //@access - protected
 export const logout = (req,res ) => {
-    res.json({message:"Logout"})
+  res.cookie('jwt','',{
+    httpOnly:true,
+    expires: new Date(0)
+})
+
+res.status(200).json({message: 'Logout'})
 }

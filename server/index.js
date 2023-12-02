@@ -4,14 +4,19 @@ import 'dotenv/config';
 import authRoute from './routes/authRoutes.js'
 import postRoutes from './routes/postRoutes.js';
 import userRoutes from './routes/usersRoutes.js'
-import mysql from 'mysql'
+import cors from 'cors'
+import cookieParser from 'cookie-parser';
 import { error, pageNotFound } from './middleware/errorHandler.js';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient()
+
 const app = express();
 const port = 3001 || process.env.PORT;
 
 // middleware
 app.use(express.json());
-
+app.use(cookieParser())
+app.use(cors())
 app.use(express.urlencoded({extended:true}));
 
 app.use('/v1/api/auth/', authRoute );
