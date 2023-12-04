@@ -7,9 +7,15 @@ const prisma = new PrismaClient();
 //@method - post
 //@access - private
 export const createPost = async(req,res) => {
-
+    const{desc, title, cat} = req.body;
     try {
-        const post = await prisma.posts.create({data:req.body})
+        const post = await prisma.posts.create({data:{
+            desc:desc,
+            title:title,
+            cat:cat,
+            userID:parseInt(req.user.id),
+            image:req.file?.originalname
+        }})
         res.status(201).json(post)
     } catch (error) {
         console.log('Error:', error)
@@ -86,8 +92,14 @@ export const getPostById = async(req,res) => {
 //@method -
 //@access -
 export const deletePost = async(req,res) => {
-   
+   const  {id} =  req.params
 
+   const user = await prisma.posts.delete({
+    where:{
+        id:parseInt(id)
+    }
+   })
+  res.status(200).json("deleted")
 }
 
 
@@ -95,6 +107,21 @@ export const deletePost = async(req,res) => {
 //@method -
 //@access -
 export const updatePost = async(req,res) => {
-    res.send('createpost')
+    const{id} = req.params;
+    const {title, desc,cat} =req.body;
+    const post = await prisma.posts.update({
+        where:{
+            id:parseInt(id)
+        },
+        data:{
+            title:title,
+            desc: desc,
+            cat:cat,
+            userID:parseInt(req.user.id),
+            image:req.file?.originalname
+        }
+    })
+
+    res.status(200).json(post)
 }
 
