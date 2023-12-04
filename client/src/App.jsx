@@ -1,7 +1,7 @@
 import './App.css'
 import './style.css'
 import {Route, Routes} from 'react-router-dom';
-import {Home, Login, Register, SinglePost, Write}from './pages/index'
+import {Home, Login, Register, SinglePost, UpdatePost, Write}from './pages/index'
 import RootLayout from './layout/RootLayout';
 import AuthLayout from './layout/AuthLayout';
 import {  Toaster } from 'react-hot-toast';
@@ -20,6 +20,7 @@ function App() {
           <Route path='/' element={<Home/>}/>
           <Route path='/post/:id' element={<SinglePost/>}/>
           <Route path='/write' element={<Write/>}/>
+          <Route path='update/:id' element={<UpdatePost/>}/>
         </Route>
       </Routes>
     </main>
