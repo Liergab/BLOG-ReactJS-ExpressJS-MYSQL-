@@ -15,7 +15,7 @@
 }
 
 .hide-scrollbar::-webkit-scrollbar-track {
-  background: rgb(246, 248, 247)5); /* Hide the scrollbar track */
+  background: rgb(246, 248, 247)5) /* Hide the scrollbar track */
 }
 
 .hide-scrollbar::-webkit-scrollbar-thumb {

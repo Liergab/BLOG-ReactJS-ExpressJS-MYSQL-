@@ -42,7 +42,7 @@ export const register = asyncHandler(async(req,res ) => {
 export const getUser = async(req,res ) => {
   // const getUser = await prisma.user.findMany();
   // res.status(200).json(getUser)
-  res.json(req.user)
+  res.json(req.user.id)
  
 }
 

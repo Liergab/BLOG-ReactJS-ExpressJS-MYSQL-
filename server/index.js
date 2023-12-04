@@ -17,6 +17,7 @@ const port = 3001 || process.env.PORT;
 app.use(express.json());
 app.use(cookieParser())
 app.use(cors())
+app.use(express.static('public'))
 app.use(express.urlencoded({extended:true}));
 
 app.use('/v1/api/auth/', authRoute );
