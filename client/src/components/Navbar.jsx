@@ -39,13 +39,13 @@ const Navbar = () => {
     <nav className='nav_container '>
         <div className='flex item-center justify-between'>
             <Link to='/'>
-                <h1 className='gradientLogo text-3xl font-bold  ' >BLOG ✒️</h1>
+                <h1 className='gradientLogo text-xl md:text-3xl font-semibold md:font-bold  ' >BLOG ✒️</h1>
               
             </Link>
         <div className='block lg:hidden' onClick={handleClick}>
            {isOpen 
-            ? <XMarkIcon className='text-text w-10 h-10 ' />
-            : <Bars3Icon className='text-text w-10 h-10 ' /> 
+            ? <XMarkIcon className='text-text w-6 md:w-10 h-6 md:h-10 ' />
+            : <Bars3Icon className='text-text w-6 md:w-10 h-6 md:h-10 ' /> 
            }
         </div>
         </div>
@@ -68,14 +68,14 @@ const Navbar = () => {
         {isOpen &&
         <div className='mt-4'>
             <ul className='flex flex-col space-y-4'>
-                <li><Button variant='text'>Art</Button></li>
-                <li> <Button variant='text'>Science</Button></li>
-                <li> <Button variant='text'>Technology</Button></li>
-                <li> <Button variant='text'>Cinema</Button></li>
-                <li> <Button variant='text'>Design</Button></li>
-                <li> <Button variant='text'>Food</Button></li>
-                <li> <Button variant='text'>{userInfo?.username}</Button></li>
-                <li> <Button variant='text'onClick={handleLogout}>Logout</Button></li>
+                <Link to={`?cat=art`}><li><Button variant='text'>Art</Button></li></Link>
+                <Link to={`?cat=science`}><li> <Button variant='text'>Science</Button></li></Link>
+                <Link to={`?cat=technology`}><li> <Button variant='text'>Technology</Button></li></Link>
+                <Link to={`?cat=cinema`}><li> <Button variant='text'>Cinema</Button></li></Link>
+                <Link to={`?cat=design`}><li> <Button variant='text'>Design</Button></li></Link>
+                <Link to={`?cat=food`}><li> <Button variant='text'>Food</Button></li></Link>
+                <li> <Button variant='text' className='gradientLogo'>{userInfo?.username}</Button></li>
+                <li > <Button variant='text' onClick={handleLogout}>Logout</Button></li>
                 <Link to='/write'>
                     <li> <Button variant='text'>Write</Button></li>
                 </Link>
