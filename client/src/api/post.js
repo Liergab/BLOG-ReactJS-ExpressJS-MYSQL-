@@ -27,3 +27,29 @@ export const useGetPostById = (id) => {
         }
     })
 }
+
+export const  useDeletePost = async(id) => {
+    await axios.delete(`${USERS_URL}/post/${id}`)
+}
+
+export const useCreatePost = async(formdata) => {
+    const response = await axios.post(`${USERS_URL}/post`, formdata, {
+        headers:{
+            'Content-Type':'multipart/form-data'
+        },
+        body: JSON.stringify(formdata)
+    })
+
+    return response.data
+}
+
+export const useUpdatePost = async(formdata) => {
+    const response = await axios.put(`${USERS_URL}/post/${formdata?.id}`, formdata, {
+        headers:{
+            'Content-Type':'multipart/form-data'
+        },
+        body: JSON.stringify(formdata)
+    })
+
+    return response.data
+}
